@@ -1,0 +1,30 @@
+version: '3'
+services:
+  workspace:
+    build: ./workspace
+    volumes:
+      - ./code:/www
+    stdin_open: true
+    tty: true
+  nginx:
+    build: ./nginx
+    volumes:
+      - ./code:/www
+      - ./nginx/conf/:/etc/nginx/conf.d/
+      - ./logs/nginx/:/var/log/nginx/
+  php-fpm:
+    build: ./php-fpm
+    # stdin_open: true
+    # tty: true
+  php-cli:
+    build: ./php-cli
+    stdin_open: true
+    tty: true
+  redis:
+    build: ./redis
+  mysql:
+    build: ./mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
