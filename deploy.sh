@@ -11,5 +11,4 @@ docker-compose build \
 && chmod -R 777 code \
 && docker-compose exec --user=www-data  php-fpm composer -vvv -d=/www/shop install \
 && docker-compose exec --user=www-data  php-fpm php /www/shop/artisan ccb:deploy -vvv \
-&& docker-compose exec --user=www-data  php-fpm php /www/shop/artisan migrate:refresh -vvv \
-&& chmod -R 755 code
+&& docker-compose exec --user=www-data  php-fpm php /www/shop/artisan migrate:refresh -vvv
