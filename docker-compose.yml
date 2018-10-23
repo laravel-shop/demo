@@ -14,7 +14,7 @@ services:
     volumes:
       - ./code:/www
       - ./nginx/conf/:/etc/nginx/conf.d/
-      - ./logs/nginx/:/var/log/nginx/
+      - ./logs/nginx/:/var/log/
   php-fpm:
     build: ./php-fpm
     volumes:
