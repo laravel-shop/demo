@@ -1,5 +1,6 @@
-ln -s $HOMR/.ssh workspace/ssh
-&& docker-compose build \
+rm -rf workspace/ssh/.ssh && \
+cp -R $HOME/.ssh workspace/ssh && \
+docker-compose build \
 && docker-compose up -d workspace php-fpm redis nginx \
 && docker-compose exec workspace rm -rf shop \
 && docker-compose exec workspace git clone git@gitee.com:allet_liability/laravel-shop.git shop \
