@@ -8,23 +8,29 @@ services:
     tty: true
   nginx:
     build: ./nginx
+    ports:
+      - 8001:80
+      - 80:8001
     volumes:
       - ./code:/www
       - ./nginx/conf/:/etc/nginx/conf.d/
       - ./logs/nginx/:/var/log/nginx/
   php-fpm:
     build: ./php-fpm
+    volumes:
+      - ./code:/www
+      - ./code/cache:/home/www-data/.composer/cache
     # stdin_open: true
     # tty: true
-  php-cli:
-    build: ./php-cli
-    stdin_open: true
-    tty: true
+  # php-cli:
+  #   build: ./php-cli
+  #   stdin_open: true
+  #   tty: true
   redis:
     build: ./redis
-  mysql:
-    build: ./mysql
-    command: --default-authentication-plugin=mysql_native_password
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+  # mysql:
+  #   build: ./mysql
+  #   command: --default-authentication-plugin=mysql_native_password
+  #   restart: always
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}

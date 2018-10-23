@@ -1,39 +1,31 @@
 FROM centos
-WORKDIR /www
+WORKDIR /www/
 ADD ./ssh/ /root/.ssh/
-RUN chmod 400 /root/.ssh/id_rsa \
-&& chmod 400 /root/.ssh/id_rsa.pub \
-&& chmod 400 /root/.ssh/known_hosts
-# ADD ./ssh/id_rsa.pub /root/.ssh/id_rsa.pub
-# ADD ./ssh/known_hosts /root/.ssh/known_hosts
-RUN  yum install git -y && git clone git@gitee.com:allet_liability/laravel-shop.git \
-&& git clone git@gitee.com:allet_liability/laravel-shop-admin.git
+RUN yum install -y git \
+    && chmod 400 /root/.ssh/id_rsa \
+    && chmod 400 /root/.ssh/id_rsa.pub \
+    && chmod 400 /root/.ssh/known_hosts
 
-FROM node:8-alpine
-RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories && \ 
-    apk add --no-cache git  && apk add --no-cache libc6-compat 
-WORKDIR /root/
-COPY --from=0 /www/laravel-shop-admin ./laravel-shop-admin
-RUN yarn config set registry 'https://registry.npm.taobao.org' && cd  /root/laravel-shop-admin \
-&& yarn && yarn run build:prod
+# FROM php:fpm-alpine
+# WORKDIR /www/
+# COPY --from=composer:1.5 /usr/bin/composer /usr/bin/composer
+# COPY --from=0 /www/shop /www/shop
+# # USER www-data
+# WORKDIR /www/
+# RUN cd /www/shop && echo `pwd` && echo `ls -al` && composer config -g repo.packagist composer https://packagist.laravel-china.org \
+#  && composer update -vvv
 
-FROM phusion/baseimage:latest
+# FROM centos
+# WORKDIR /www/
+# ADD ./ssh/ /root/.ssh/
+# COPY --from=1 /www/shop /www/shop
+# RUN yum install -y git \
+#     && chmod 400 /root/.ssh/id_rsa \
+#     && chmod 400 /root/.ssh/id_rsa.pub \
+#     && chmod 400 /root/.ssh/known_hosts
 
-FROM phusion/baseimage:latest
-WORKDIR /www
-COPY --from=0 /www/laravel-shop ./laravel-shop/
-COPY --from=1 /root/laravel-shop-admin/dist ./laravel-shop-admin/
-# # FROM centos
-# # RUN useradd wk
-# # # COPY ./.ssh /home/wk
-# # # COPY ./env /home/wk
-# # RUN yum update -y && yum install git -y 
-# # USER wk
-# # # RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash \
-# # #     && . $NVM_DIR/nvm.sh \
-# # #     && nvm install 8 \
-# # #     && nvm use 8 \
-# # #     && git clone git@gitee.com:allet_liability/laravel-shop.git  \
-# # #     && git clone git@gitee.com:allet_liability/laravel-shop-admin.git
-# CMD ["/bin/bash"]
-# # WORKDIR /www/wwwdata
+# USER www-data
+# WORKDIR /www/
+# RUN composer config -g repo.packagist composer https://packagist.laravel-china.org \
+# && cd /www/laravel-shop &&  composer install -vvv
+# RUN adduser shop
